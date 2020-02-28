@@ -7,42 +7,52 @@
 
 #include "Node.h"
 #include "LinkedList.h"
+#include <iostream>
+#include <string>
+
+using namespace std;
+
 LinkedList::LinkedList()
 {
     this->Head = nullptr;
     this->Tail = nullptr;
     this->length = 0;
 }
-void LinkedList::push(int x, int y, int distanceTraveled, int distanceToGoal)
-{
-    //declare head ref
-    Node** head_ref = &Head;
-    /* 1. allocate node */
-    Node* new_node = new Node();
 
-    /* 2. put in the data */
-    new_node->x = x;
-    new_node->y = y;
-    new_node->distanceTraveled = distanceTraveled;
-    new_node->distanceToGoal = distanceToGoal;
-    new_node->weight = distanceToGoal + distanceTraveled;
-
-
-    /* 3. Make next of new node as head */
-    new_node->child = (*head_ref);
-    new_node->childExists = true;
-
-    /* 4. move the head to point to the new node */
-    (*head_ref) = new_node;
+bool LinkedList::isEmpty() {
+    if (Head != nullptr && Tail != nullptr) {
+        return false;
+    }
+    return true;
 }
 
-/* Given a node prev_node, insert a new node after the given
-   prev_node */
-void LinkedList::insertAfter(Node* prev_node, int x, int y, int distanceTraveled, int distanceToGoal)
+bool LinkedList::contains(Node check)
+{
+    Node* current = this->Head;
+    while (current != nullptr) {
+        if (check.x == current->x && check.y == current->y) {
+            return true;
+        }
+        else {
+            current = current->child;
+        }
+    }
+    return false;
+}
+
+/* Given data, insert into the list based on weight */
+void LinkedList::insertInOrder(int x, int y, int distanceTraveled, int distanceToGoal)
 {
     /*1. check if the given prev_node is NULL */
-    if (prev_node == nullptr)
+    if (Head == nullptr)
     {
+        Head = new Node();
+        Head->x = x;
+        Head->y = y;
+        Head->distanceTraveled = distanceTraveled;
+        Head->distanceToGoal = distanceToGoal;
+        Head->weight = distanceToGoal + distanceTraveled;
+        Tail = Head;
         return;
     }
 
@@ -55,51 +65,73 @@ void LinkedList::insertAfter(Node* prev_node, int x, int y, int distanceTraveled
     new_node->distanceTraveled = distanceTraveled;
     new_node->distanceToGoal = distanceToGoal;
     new_node->weight = distanceToGoal + distanceTraveled;
-    /* 4. Make next of new node as next of prev_node */
-    new_node->child = prev_node->child;
-
-    /* 5. move the next of prev_node as new_node */
-    prev_node->child = new_node;
-}
-
-/* Given a reference (pointer to pointer) to the tail
-   of a list and an int, appends a new node at the end  */
-void LinkedList::append(int x, int y, int distanceTraveled, int distanceToGoal)
-{   
-    //Declare tail_ref
-    Node** tail_ref = &Tail;
-    /* 1. allocate node */
-    Node* new_node = new Node();
-
-    Node* last = *tail_ref;  /* used in step 5*/
-
-    /* 2. put in the data  */
-    new_node->x = x;
-    new_node->y = y;
-    new_node->distanceTraveled = distanceTraveled;
-    new_node->distanceToGoal = distanceToGoal;
-    new_node->weight = distanceToGoal + distanceTraveled;
-
-    /* 3. This new node is going to be the last node, so make next
-          of it as NULL*/
-    new_node->child = nullptr;
-
-    /* 4. If the Linked List is empty, then make the new node as head */
-    if (*tail_ref == nullptr)
-    {
-        *tail_ref = new_node;
+    //check if head is < new node
+    if (Head->weight > new_node->weight) {
+        new_node->child = Head;
+        Head = new_node;
+        //exit
         return;
     }
 
-    /* 5. Else traverse till the last node */
-    while (last->child != nullptr)
-        last = last->child;
+    /* 4. Find place in list based on weight */
+    Node* prev_node = Head;
+    Node* current = Head;
+    while (current->weight < new_node->weight) {
+        prev_node = current;
+        current = current->child;
+    }
+    /*5. set new_node child to prev nodes child*/
+    new_node->child = prev_node->child;
 
-    /* 6. Change the next of last node */
-    last->child = new_node;
-    return;
+    /* 6. set the child of previous node to new_node */
+    prev_node->child = new_node;
 }
-void LinkedList::getHead(Node** point) {
-    *point = Head;
+
+void LinkedList::printList()
+{
+    Node* node = Head;
+    while (node != nullptr)
+    {
+        cout << endl;
+        cout << "X: " << node->x << endl;
+        cout << "Y: " << node->y << endl;
+        cout << "DistTraveled: " << node->distanceTraveled << endl;
+        cout << "DistGoal: " << node->distanceToGoal << endl;
+        cout << "Weigth: " << node->weight << endl;
+        node = node->child;
+    }
+}
+void LinkedList::printHead()
+{
+    cout << endl;
+    cout << "X: " << Head->x << endl;
+    cout << "Y: " << Head->y << endl;
+    cout << "DistTraveled: " << Head->distanceTraveled << endl;
+    cout << "DistGoal: " << Head->distanceToGoal << endl;
+    cout << "Weigth: " << Head->weight << endl;
+}
+void LinkedList::printTail()
+{
+    cout << endl;
+    cout << "X: " << Tail->x << endl;
+    cout << "Y: " << Tail->y << endl;
+    cout << "DistTraveled: " << Tail->distanceTraveled << endl;
+    cout << "DistGoal: " << Tail->distanceToGoal << endl;
+    cout << "Weigth: " << Tail->weight << endl;
+}
+
+Node* LinkedList::pop() {
+    Node* ret = Head;
+    Head = Head->child;
+    return ret;
+}
+void LinkedList::print(Node* print)
+{
+    cout << endl;
+    cout << "X: " << print->x << endl;
+    cout << "Y: " << print->y << endl;
+    cout << "DistTraveled: " << print->distanceTraveled << endl;
+    cout << "DistGoal: " << print->distanceToGoal << endl;
+    cout << "Weigth: " << print->weight << endl;
 }
 ;
