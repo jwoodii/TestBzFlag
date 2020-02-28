@@ -3,19 +3,16 @@
 class LinkedList {
 public:
     LinkedList();
-    LinkedList(Node start);
-    void lowestSearch(Node lowest);
-    bool isEmpty();
-    void addNode(Node add);
-    void addAtHead(Node add);
-    void remNode(Node rem);
-    bool contains(Node check);
-    int getLength();
-    Node popHead();
+    void push(int x, int y, int distanceTraveled, int distanceToGoal);
+    void insertAfter(Node* prev_node, int x, int y, int distanceTraveled, int distanceToGoal);
+    void append(int x, int y, int distanceTraveled, int distanceToGoal);
+    void getHead(Node** point);
+    
 private:
     Node* Head;
     Node* Tail;
     int length;
+
 };
 
 

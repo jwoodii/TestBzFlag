@@ -4,24 +4,45 @@
 #include "LinkedList.h"
 using namespace std;
 
+void printList(LinkedList* list)
+{
+    Node* node;
+    list->getHead(&node);
+    while (node != NULL)
+    {
+        cout << endl;
+        cout << "X: " << node->x << endl;
+        cout << "Y: " << node->y << endl;
+        cout << "DistTraveled: " << node->distanceTraveled << endl;
+        cout << "DistGoal: " << node->distanceToGoal << endl;
+        cout << "Weigth: " << node->weight << endl;
+        node = node->child;
+    }
+}
+
 int main()
 {
-    Node second = Node(2, 5, 1, 9);
-    Node first = Node(1, 5, 0, 10,second);
-    Node third = Node(3, 5, 2, 8);
-    second.setChild(third);
-    cout << "This is Second" << endl;
-    cout << "X: " << second.getX() << endl;
-    cout << "Y: " << second.getY() << endl;
-    cout << "Dist Traveled: " << second.getDistanceTraveled() << endl;
-    cout << "Dist Goal: " << second.getDistanceToGoal() << endl;
-    cout << "Weight: " << second.getWeight() << endl;
-    cout << "This is Second's Child" << endl;
-    cout << "X: " << second.getChild()->getX() << endl;
-    cout << "Y: " << second.getChild()->getY() << endl;
-    cout << "Dist Traveled: " << second.getChild()->getDistanceTraveled() << endl;
-    cout << "Dist Goal: " << second.getChild()->getDistanceToGoal() << endl;
-    cout << "Weight: " << second.getChild()->getWeight() << endl;
+    LinkedList* list = new LinkedList();
+        /* Start with the empty list */
+        Node* head = NULL;
 
-    return 0;
-}
+        // Insert 0,0,0,3. So linked list becomes 6->NULL  
+        list->append(0,0,0,3);
+
+        // Insert 0,1,1,2 at the beginning.  
+        // So linked list becomes 7->6->NULL  
+        list->push(0,1,1,2);
+
+        // Insert  at the beginning.  
+        // So linked list becomes 1->7->6->NULL  
+        //list->push(0,2,2,1);
+
+        // Insert 0,3,3,0 at the end. So  
+        // linked list becomes 1->7->6->4->NULL  
+        list->append(0,3,3,0);
+
+        cout << "Created Linked list is: ";
+        printList(list);
+
+        return 0;
+    }
