@@ -2,35 +2,65 @@
 #include <string>
 #include "Node.h"
 #include "LinkedList.h"
+#include <queue>
+#include <vector>
 using namespace std;
 
+struct compare
+{
+    bool operator()(const Node& a, const Node& b)
+    {
+        return a.weight < b.weight;
+    }
+};
+
+Node GenerateNode(int x, int y, int distanceTrav, int distanceGoal) {
+    Node temp = new Node();
+    temp.x = x;
+    temp.y = y;
+    temp.distanceToGoal = distanceGoal;
+    temp.distanceTraveled = distanceTrav;
+    temp.weight = temp.distanceToGoal + temp.distanceTraveled;
+    return temp;
+}
+
+
+
+void aStar(int start[2], int goal[2], std::vector<Node> path) {
+    bool foundGoal = false;
+    Node* current = nullptr;
+    Node temp;
+    int x = 1;
+    std::priority_queue <Node, std::vector<Node>, compare> open;
+    std::priority_queue <Node, std::vector<Node>, compare> closed;
+    open.push(GenerateNode(1, 1, 0, 6));
+    open.push(GenerateNode(1, 1, 0, 1));
+    open.push(GenerateNode(1, 1, 0, 5));
+    open.push(GenerateNode(1, 1, 0, 2));
+    open.push(GenerateNode(1, 1, 0, 4));
+    open.push(GenerateNode(1, 1, 0, 3));
+    while (!open.empty()) {
+        temp = open.top();
+        cout << "Node " << x << ": " << endl;
+        cout << temp.x <<endl;
+        cout << temp.y << endl;
+        cout << temp.distanceToGoal << endl;
+        cout << temp.distanceTraveled << endl;
+        cout << temp.weight << endl;
+        x++;
+        open.pop();
+    }
+    //Begin Astar conversion
+
+}
 int main()
 {
-    LinkedList* list = new LinkedList();
-    /* Start with the empty list */
-    list->printList();
-    cout << endl << list->isEmpty() << endl;
-
-    // Insert 0,0,0,3. So linked list becomes 6->NULL  
-    list->insertInOrder(0,0,0,30);
-
-    // Insert 0,1,1,2 at the beginning.  
-    list->insertInOrder(0,1,1,15);
-
-    // Insert  at the beginning.  
-    list->insertInOrder(0,2,2,23);
-
-    // Insert 0,3,3,0 at the end.  
-    list->insertInOrder(0,3,3,7);
-
-    cout << "Created Linked list is: ";
-    list->printList();
-    cout << endl << "Head: ";
-    list->printHead();
-    cout <<endl << "Tail: ";
-    list->printTail();
-    cout << endl << "Pop: ";
-    list->print(list->pop());
+    int start[2];
+    start[0] = 0;
+    start[1] = 0;
+    int goal[2] = { 5,5 };
+    std::vector<Node> path;
+    aStar(start,goal,path);
 
     return 0;
 }
