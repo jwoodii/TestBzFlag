@@ -4,6 +4,8 @@
 #include <vector>
 #include "Node.h"
 #include "LinkedList.h"
+#include <queue>
+#include <vector>
 using namespace std;
 
 bool IsInQueue(Node* node, std::priority_queue <Node*> open) {
@@ -76,51 +78,11 @@ void aStar(float start[2], float goal[2], std::vector<Node*> path) {
                 path.insert(path.begin(), current);
                 current = current->parent;
 
-            }
-            return;
-        }
-        else
-        {
-            for (int i = -1 * 20; i <= 1 * 20; i++) {
-                for (int j = -1 * 20; i <= 1 * 20; i++) {
-                    //Node* node_successor = new Node();
-                    Node* node_successor = new Node();
-                    node_successor = GenerateNode(current, current->x + i, current->y + j, current->distanceTraveled, current->distanceToGoal);
-                    if (IsInQueue(node_successor, open)) {
-                        if (node_successor->distanceTraveled <= current->distanceTraveled) {
-                            goto line20;
-                        }
-                    }
-                    else if (IsInQueue(node_successor, closed)) {
-                        if (node_successor->distanceTraveled <= current->distanceTraveled) {
-                            goto line20;
-                        }
-                        //closed.pop(); //doesn't this just pop the first in closed rather than the actual nodesuccesor
-                        PopACertainNode(node_successor, closed);
-                        open.push(node_successor);
-                    }
-                    else {
-                        node_successor->weight = node_successor->distanceTraveled + (int)hypotf(goal[0] - node_successor->x, goal[1] - node_successor->y);
-                        open.push(node_successor);
-                    }
-                    node_successor->weight = current->weight;
-                }
-            line20:
-                closed.push(current);
-            }
-        }
-    }
-}
-int main()
+struct compare
 {
-    std::vector<Node*> path;
-    float start[2] = { 0,0 };
-    float goal[2] = { 10,10 };
-    aStar(start, goal, path);
-    for (int i = 0; i < path.size(); i++) {
-        cout << "Node " << i << ": ";
-        cout << path[i]->x << endl;
-        cout << path[i]->y << endl;
+    bool operator()(const Node& a, const Node& b)
+    {
+        return a.weight < b.weight;
     }
-    return 0;
-}
+};
+
