@@ -7,4 +7,18 @@ public:
     int distanceToGoal;
     int weight;
     Node* child;
+    Node* parent;
+    bool operator< (const Node& other) const
+    {
+        return weight < other.weight;
+    }
+    bool operator> (const Node& other) const
+    {
+        return weight < other.weight;
+    }
+    bool operator== (const Node& other) const
+    {
+        return weight == other.weight;
+    }
 };
+
